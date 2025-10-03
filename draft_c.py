@@ -54,18 +54,18 @@ merged = merged[merged["Year"] >= 1951]
 can_df = can_df[can_df["Year"] >= 1951]
 draft_df = draft_df[draft_df["Year"] >= 1951]
 
-# --- Subsets (Immigration only for correlation) ---
+# --- Subsets ---
 viet = merged[(merged["Year"]>=1964)&(merged["Year"]<=1973)]
 korea = merged[(merged["Year"]>=1951)&(merged["Year"]<=1953)]
 combined = pd.concat([viet, korea])
 
-# --- Immigration correlations ---
+# --- Correlations ---
 corr_texts = []
 for label, df in [("Vietnam", viet), ("Korea", korea), ("Combined", combined)]:
     if len(df) > 1:
-        r, p = pearsonr(df["Immigrants"], df["Inductions"])
-        corr_texts.append(f"{label} (Immigration): r={r:.3f}, p={p:.3g}, n={len(df)})")
-        print(f"{label} (Immigration): r={r:.3f}, p={p:.3g}, n={len(df)})")
+        r, p = pearsonr(df["NetMigration"], df["Inductions"])
+        corr_texts.append(f"{label}: r={r:.3f}, p={p:.3g}, n={len(df)})")
+        print(f"{label}: r={r:.3f}, p={p:.3g}, n={len(df)})")
     else:
         corr_texts.append(f"{label}: not enough data (n={len(df)})")
         print(f"{label}: not enough data (n={len(df)})")
@@ -88,7 +88,7 @@ ax2.set_ylabel("US Draft Inductions", color="purple")
 ax2.tick_params(axis="y", labelcolor="purple")
 
 # Title, grid, ticks
-plt.title("Canada Migration vs. U.S. Draft Inductions (Korea & Vietnam) — Immigration correlation")
+plt.title("Canada Migration vs. U.S. Draft Inductions (Korea & Vietnam)")
 ax1.set_xticks(range(1951, max(can_df["Year"])+1, 5))
 ax1.grid(True, linestyle="--", alpha=0.6)
 
@@ -118,5 +118,5 @@ plt.figtext(
 
 # Save
 plt.tight_layout()
-plt.savefig("canada_draft_immigration_overlay.png", dpi=300)
+plt.savefig("canada_draft_overlay.png", dpi=300)
 plt.close()
